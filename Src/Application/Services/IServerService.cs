@@ -6,7 +6,7 @@ namespace Chatter.Application.Services
 {
     public interface IServerService
     {
-        event EventHandler<DisconnectedEventArgs> Disconnected;
+        event EventHandler<bool> Disconnected;
 
         Task ListenAsync(IPAddress address, int port);
 
