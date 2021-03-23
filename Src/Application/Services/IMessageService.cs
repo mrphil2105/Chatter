@@ -5,7 +5,7 @@ namespace Chatter.Application.Services
 {
     public interface IMessageService
     {
-        event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        event EventHandler<string> MessageReceived;
 
         Task SendMessageAsync(string message);
     }
