@@ -6,6 +6,8 @@ namespace Chatter.Application.Services
 {
     public interface IClientService
     {
+        event EventHandler Connected;
+
         event EventHandler<bool> Disconnected;
 
         Task ConnectAsync(IPAddress address, int port);
