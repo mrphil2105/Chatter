@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chatter.Application.Services
@@ -10,7 +11,7 @@ namespace Chatter.Application.Services
 
         event EventHandler<bool> Disconnected;
 
-        Task ConnectAsync(IPAddress address, int port);
+        Task<Task> ConnectAsync(IPAddress address, int port, CancellationToken cancellationToken = default);
 
         void Disconnect(bool force = false);
     }
