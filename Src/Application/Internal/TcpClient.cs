@@ -125,6 +125,8 @@ namespace Chatter.Application.Internal
                 return;
             }
 
+            SetToDisconnected(true);
+
             _nullMessageTimer.Dispose();
             _disconnectTimer.Dispose();
 
