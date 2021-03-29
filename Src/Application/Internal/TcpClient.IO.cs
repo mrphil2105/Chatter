@@ -51,6 +51,8 @@ namespace Chatter.Application.Internal
 
         public Task LoopReceiveDataAsync()
         {
+            ThrowIfDisposed();
+
             var pipe = new Pipe();
             var fillTask = FillPipeAsync(pipe.Writer);
             var readTask = ReadPipeAsync(pipe.Reader);
