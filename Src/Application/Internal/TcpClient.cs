@@ -73,6 +73,10 @@ namespace Chatter.Application.Internal
                 return;
             }
 
+            // Stop both of the timers.
+            _nullMessageTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            _disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
             if (abortive)
             {
                 // Discards any pending data when disconnecting.
@@ -84,8 +88,10 @@ namespace Chatter.Application.Internal
                 _socket.Shutdown(SocketShutdown.Send);
             }
 
-            // Close the socket and dispose the current instance.
-            Dispose();
+            // Close the socket and dispose the 'NetworkStream'.
+            _socket.Close();
+            _networkStream.Dispose();
+
             Disconnected?.Invoke(this, abortive);
         }
 

@@ -53,6 +53,11 @@ namespace Chatter.Application.Internal
         {
             ThrowIfDisposed();
 
+            if (Interlocked.CompareExchange(ref _isConnected, 0, 0) == 0)
+            {
+                throw new InvalidOperationException("The client is not connected.");
+            }
+
             var pipe = new Pipe();
             var fillTask = FillPipeAsync(pipe.Writer);
             var readTask = ReadPipeAsync(pipe.Reader);
