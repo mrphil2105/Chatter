@@ -51,6 +51,9 @@ namespace Chatter.Application.Internal
                 return;
             }
 
+            // Stop the null message timer.
+            _nullMessageTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
             try
             {
                 // Initiate graceful shutdown by sending FD_CLOSE.
