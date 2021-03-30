@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace Chatter.AvaloniaApp.Views
@@ -8,6 +9,9 @@ namespace Chatter.AvaloniaApp.Views
         public MainWindow()
         {
             AvaloniaXamlLoader.Load(this);
+#if DEBUG
+            this.AttachDevTools();
+#endif
         }
     }
 }
