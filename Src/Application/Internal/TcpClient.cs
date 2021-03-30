@@ -26,7 +26,7 @@ namespace Chatter.Application.Internal
 
         public TcpClient(Socket socket)
         {
-            _socket = socket;
+            _socket = socket ?? throw new ArgumentNullException(nameof(socket));
             _networkStream = new NetworkStream(socket);
             _sendLock = new SemaphoreSlim(1, 1);
 
