@@ -5,9 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Chatter.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}"
         Width="450" Height="500"
         Title="Chatter">
-    <Design.DataContext>
-        <vm:MainViewModel />
-    </Design.DataContext>
 </Window>
