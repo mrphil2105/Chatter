@@ -6,6 +6,7 @@
         xmlns:vm="using:Chatter.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainViewModel}"
+        MinWidth="450" MinHeight="300"
         Width="450" Height="500"
         Title="Chatter">
 </Window>
