@@ -18,5 +18,10 @@ namespace Chatter.AvaloniaApp.Threading
         {
             return _dispatcher.InvokeAsync(action);
         }
+
+        public Task InvokeAsync(Func<Task> func)
+        {
+            return _dispatcher.InvokeAsync(func);
+        }
     }
 }
