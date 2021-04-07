@@ -3,5 +3,6 @@
     <Style Selector="Button">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
 </Styles>
