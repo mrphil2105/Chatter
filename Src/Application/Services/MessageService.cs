@@ -56,7 +56,7 @@ namespace Chatter.Application.Services
                 .ConfigureAwait(false);
         }
 
-        private void OnConnected(object sender, EventArgs e)
+        private void OnConnected(object? sender, EventArgs e)
         {
             // Only one of either the 'ServerService' or 'ClientService' should be connected, not both at the same time.
             Debug.Assert(_tcpClient == null, $"Field '{nameof(_tcpClient)}' was unexpectedly not 'null'.");
@@ -70,13 +70,13 @@ namespace Chatter.Application.Services
             }
         }
 
-        private void OnDisconnected(object sender, bool abortive)
+        private void OnDisconnected(object? sender, bool abortive)
         {
             _tcpClient!.DataReceived -= OnDataReceived;
             _tcpClient = null;
         }
 
-        private void OnDataReceived(object sender, ReadOnlySequence<byte> messageBytes)
+        private void OnDataReceived(object? sender, ReadOnlySequence<byte> messageBytes)
         {
             if (messageBytes.Length == 0)
             {

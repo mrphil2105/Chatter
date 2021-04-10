@@ -72,7 +72,7 @@ namespace Chatter.Application.Services
             return _tcpClient;
         }
 
-        private void OnDisconnected(object sender, bool abortive)
+        private void OnDisconnected(object? sender, bool abortive)
         {
             Reset();
             Disconnected?.Invoke(this, abortive);
