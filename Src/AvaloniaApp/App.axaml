@@ -5,6 +5,7 @@
         <FluentTheme Mode="Dark" />
 
         <StyleInclude Source="/Styles/WindowStyles.axaml" />
+        <StyleInclude Source="/Styles/CommonStyles.axaml" />
         <StyleInclude Source="/Styles/ButtonStyles.axaml" />
     </Application.Styles>
 </Application>
