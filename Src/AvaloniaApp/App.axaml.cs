@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Diagnostics;
+using Autofac;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -44,7 +45,10 @@ namespace Chatter.AvaloniaApp
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
             {
-                desktopLifetime.MainWindow = new MainWindow { DataContext = new MainViewModel() };
+                Debug.Assert(_container != null, "IoC container was unexpectedly 'null'.");
+
+                var mainViewModel = _container.Resolve<MainViewModel>();
+                desktopLifetime.MainWindow = new MainWindow { DataContext = mainViewModel };
             }
 
             base.OnFrameworkInitializationCompleted();
