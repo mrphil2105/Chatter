@@ -13,7 +13,7 @@ namespace Chatter.ViewModels.Commands
         public AsyncCommand(Func<Task> executeFunc, Func<bool>? canExecuteFunc = null)
         {
             _canExecuteFunc = canExecuteFunc;
-            _executeFunc = executeFunc;
+            _executeFunc = executeFunc ?? throw new ArgumentNullException(nameof(executeFunc));
         }
 
         protected override bool CanExecute()

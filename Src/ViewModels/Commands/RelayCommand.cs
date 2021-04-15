@@ -10,7 +10,7 @@ namespace Chatter.ViewModels.Commands
         public RelayCommand(Action executeAction, Func<bool>? canExecuteFunc = null)
         {
             _canExecuteFunc = canExecuteFunc;
-            _executeAction = executeAction;
+            _executeAction = executeAction ?? throw new ArgumentNullException(nameof(executeAction));
         }
 
         protected override bool CanExecute()
