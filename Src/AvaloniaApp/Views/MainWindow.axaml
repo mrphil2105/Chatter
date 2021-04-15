@@ -3,10 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="using:Chatter.AvaloniaApp.Views"
         xmlns:vm="using:Chatter.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainViewModel}"
         MinWidth="450" MinHeight="300"
         Width="450" Height="500"
         Title="Chatter">
+
+    <Grid RowDefinitions="Auto,*">
+        <ContentControl Content="{Binding ConnectionViewModel}">
+            <ContentControl.ContentTemplate>
+                <v:ViewLocator />
+            </ContentControl.ContentTemplate>
+        </ContentControl>
+
+        <ContentControl Grid.Row="1" IsEnabled="{Binding ConnectionViewModel.IsConnected}"
+                        Content="{Binding MessagesViewModel}">
+            <ContentControl.ContentTemplate>
+                <v:ViewLocator />
+            </ContentControl.ContentTemplate>
+        </ContentControl>
+    </Grid>
+
 </Window>
