@@ -49,6 +49,7 @@ namespace Chatter.AvaloniaApp
 
                 var mainViewModel = _container.Resolve<MainViewModel>();
                 desktopLifetime.MainWindow = new MainWindow { DataContext = mainViewModel };
+                desktopLifetime.Exit += (_, _) => _container.Dispose();
             }
 
             base.OnFrameworkInitializationCompleted();
