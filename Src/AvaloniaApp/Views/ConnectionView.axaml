@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Chatter.AvaloniaApp.Views.ConnectionView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:vm="using:Chatter.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:ConnectionViewModel}">
+
+    <i:Interaction.Behaviors>
+        <ia:DataTriggerBehavior Binding="{Binding IsServer}" Value="False">
+            <ia:ChangePropertyAction TargetObject="{Binding #ConnectOrListenButton}" PropertyName="Content"
+                                     Value="Connect" />
+        </ia:DataTriggerBehavior>
+        <ia:DataTriggerBehavior Binding="{Binding IsServer}" Value="True">
+            <ia:ChangePropertyAction TargetObject="{Binding #ConnectOrListenButton}" PropertyName="Content"
+                                     Value="Listen" />
+        </ia:DataTriggerBehavior>
+    </i:Interaction.Behaviors>
+
+    <DockPanel>
+        <Border DockPanel.Dock="Left" Classes="Container">
+            <StackPanel VerticalAlignment="Center" IsEnabled="{Binding !IsConnected}">
+                <RadioButton Content="Client" IsChecked="{Binding !IsServer}" />
+                <RadioButton Content="Server" IsChecked="{Binding IsServer}" />
+            </StackPanel>
+        </Border>
+
+        <Border Classes="Container">
+            <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,Auto">
+                <TextBox Watermark="IP Address" IsEnabled="{Binding !IsConnected}" Text="{Binding Address}">
+                    <TextBox.KeyBindings>
+                        <KeyBinding Gesture="Enter" Command="{Binding ConnectOrListenCommand}" />
+                    </TextBox.KeyBindings>
+                </TextBox>
+
+                <NumericUpDown Grid.Column="0" Grid.Row="1" Minimum="0" Maximum="65535" Watermark="Port"
+                               IsEnabled="{Binding !IsConnected}" Value="{Binding Port}">
+                    <NumericUpDown.KeyBindings>
+                        <KeyBinding Gesture="Enter" Command="{Binding ConnectOrListenCommand}" />
+                    </NumericUpDown.KeyBindings>
+                </NumericUpDown>
+
+                <Button Grid.Column="1" Grid.Row="0" Name="ConnectOrListenButton" Content="Connect"
+                        Command="{Binding ConnectOrListenCommand}" />
+                <Button Grid.Column="1" Grid.Row="1" Content="Disconnect" Command="{Binding DisconnectCommand}" />
+            </Grid>
+        </Border>
+    </DockPanel>
+
+</UserControl>
