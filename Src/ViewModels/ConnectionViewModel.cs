@@ -96,7 +96,12 @@ namespace Chatter.ViewModels
                 return;
             }
 
-            // The port does not need to be checked, as the view should guarantee that the value is in range.
+            if (Port < ushort.MinValue || Port > ushort.MaxValue)
+            {
+                await _viewManager.ShowErrorBoxAsync("The specified port is invalid.", "Invalid Port");
+
+                return;
+            }
 
             if (IsServer)
             {
