@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Chatter.AvaloniaApp.Views.MessagesView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="using:Chatter.AvaloniaApp.Views"
+             xmlns:vm="using:Chatter.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:MessagesViewModel}">
+
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom">
+            <Button DockPanel.Dock="Right" Content="Send" Command="{Binding SendMessageCommand}" />
+
+            <TextBox MaxLength="1000" Watermark="Type a message to send" Text="{Binding Message}">
+                <TextBox.KeyBindings>
+                    <KeyBinding Gesture="Enter" Command="{Binding SendMessageCommand}" />
+                </TextBox.KeyBindings>
+            </TextBox>
+        </DockPanel>
+
+        <Border Classes="Container">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl Margin="0,6" Items="{Binding MessageViewModels}">
+                    <ItemsControl.ItemTemplate>
+                        <v:ViewLocator />
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+    </DockPanel>
+
+</UserControl>
