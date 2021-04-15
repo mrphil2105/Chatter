@@ -8,5 +8,6 @@
         <StyleInclude Source="/Styles/CommonStyles.axaml" />
         <StyleInclude Source="/Styles/BorderStyles.axaml" />
         <StyleInclude Source="/Styles/ButtonStyles.axaml" />
+        <StyleInclude Source="/Styles/RadioButtonStyles.axaml" />
     </Application.Styles>
 </Application>
