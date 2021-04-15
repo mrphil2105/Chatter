@@ -20,7 +20,7 @@
         </DockPanel>
 
         <Border Classes="Container">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" ScrollChanged="OnScrollChanged">
                 <ItemsControl Margin="0,6" Items="{Binding MessageViewModels}">
                     <ItemsControl.ItemTemplate>
                         <v:ViewLocator />
