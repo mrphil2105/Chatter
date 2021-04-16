@@ -133,6 +133,7 @@ namespace Chatter.Application.Internal
                         {
                             if (buffer.Length < sizeof(int))
                             {
+                                // The length prefix has not been received yet.
                                 break;
                             }
 
@@ -144,6 +145,7 @@ namespace Chatter.Application.Internal
 
                         if (buffer.Length < length.Value)
                         {
+                            // The remaining data has not been received yet.
                             break;
                         }
 
