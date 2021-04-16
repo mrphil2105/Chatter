@@ -107,12 +107,12 @@ namespace Chatter.ViewModels
             {
                 // Start listening for an incoming client on the specified address and port.
                 await _serverService.ListenAsync(address, Port);
+
+                return;
             }
-            else
-            {
-                // Attempt to connect to a remote user acting as server on the specified address and port.
-                await _clientService.ConnectAsync(address, Port);
-            }
+
+            // Attempt to connect to a remote user acting as server on the specified address and port.
+            await _clientService.ConnectAsync(address, Port);
         }
 
         private void Disconnect()
