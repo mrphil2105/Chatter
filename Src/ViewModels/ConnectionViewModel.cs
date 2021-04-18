@@ -15,11 +15,11 @@ namespace Chatter.ViewModels
         private readonly IServerService _serverService;
         private readonly IViewManager _viewManager;
 
-        private string _address;
-        private bool _isConnected;
-
         private bool _isServer;
+        private string _address;
         private int _port;
+
+        private bool _isConnected;
 
         public ConnectionViewModel(IDispatcher dispatcher, IViewManager viewManager, IServerService serverService,
             IClientService clientService)
@@ -58,6 +58,18 @@ namespace Chatter.ViewModels
             set => Set(ref _isServer, value);
         }
 
+        public string Address
+        {
+            get => _address;
+            set => Set(ref _address, value);
+        }
+
+        public int Port
+        {
+            get => _port;
+            set => Set(ref _port, value);
+        }
+
         public bool IsConnected
         {
             get => _isConnected;
@@ -69,18 +81,6 @@ namespace Chatter.ViewModels
                 ConnectOrListenCommand.RaiseCanExecuteChanged();
                 DisconnectCommand.RaiseCanExecuteChanged();
             }
-        }
-
-        public string Address
-        {
-            get => _address;
-            set => Set(ref _address, value);
-        }
-
-        public int Port
-        {
-            get => _port;
-            set => Set(ref _port, value);
         }
 
         public AsyncCommand ConnectOrListenCommand { get; }
