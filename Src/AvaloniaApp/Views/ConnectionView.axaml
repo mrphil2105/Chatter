@@ -22,7 +22,14 @@
 
     <DockPanel>
         <Border DockPanel.Dock="Left" Classes="Container">
-            <StackPanel VerticalAlignment="Center" IsEnabled="{Binding !IsConnected}">
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel.IsEnabled>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding Path="!IsConnectingOrListening" />
+                        <Binding Path="!IsConnected" />
+                    </MultiBinding>
+                </StackPanel.IsEnabled>
+
                 <RadioButton Content="Client" IsChecked="{Binding !IsServer}" />
                 <RadioButton Content="Server" IsChecked="{Binding IsServer}" />
             </StackPanel>
@@ -30,14 +37,28 @@
 
         <Border Classes="Container">
             <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,Auto">
-                <TextBox Watermark="IP Address" IsEnabled="{Binding !IsConnected}" Text="{Binding Address}">
+                <TextBox Watermark="IP Address" Text="{Binding Address}">
+                    <TextBox.IsEnabled>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!IsConnectingOrListening" />
+                            <Binding Path="!IsConnected" />
+                        </MultiBinding>
+                    </TextBox.IsEnabled>
+
                     <TextBox.KeyBindings>
                         <KeyBinding Gesture="Enter" Command="{Binding ConnectOrListenCommand}" />
                     </TextBox.KeyBindings>
                 </TextBox>
 
                 <NumericUpDown Grid.Column="0" Grid.Row="1" Minimum="0" Maximum="65535" Watermark="Port"
-                               IsEnabled="{Binding !IsConnected}" Value="{Binding Port}">
+                               Value="{Binding Port}">
+                    <NumericUpDown.IsEnabled>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!IsConnectingOrListening" />
+                            <Binding Path="!IsConnected" />
+                        </MultiBinding>
+                    </NumericUpDown.IsEnabled>
+
                     <NumericUpDown.KeyBindings>
                         <KeyBinding Gesture="Enter" Command="{Binding ConnectOrListenCommand}" />
                     </NumericUpDown.KeyBindings>
