@@ -19,6 +19,7 @@ namespace Chatter.ViewModels
         private string _address;
         private int _port;
 
+        private bool _isConnectingOrListening;
         private bool _isConnected;
 
         public ConnectionViewModel(IDispatcher dispatcher, IViewManager viewManager, IServerService serverService,
@@ -70,6 +71,12 @@ namespace Chatter.ViewModels
             set => Set(ref _port, value);
         }
 
+        public bool IsConnectingOrListening
+        {
+            get => _isConnectingOrListening;
+            set => Set(ref _isConnectingOrListening, value);
+        }
+
         public bool IsConnected
         {
             get => _isConnected;
@@ -103,16 +110,25 @@ namespace Chatter.ViewModels
                 return;
             }
 
-            if (IsServer)
+            IsConnectingOrListening = true;
+
+            try
             {
-                // Start listening for an incoming client on the specified address and port.
-                await _serverService.ListenAsync(address, Port);
+                if (IsServer)
+                {
+                    // Start listening for an incoming client on the specified address and port.
+                    await _serverService.ListenAsync(address, Port);
 
-                return;
+                    return;
+                }
+
+                // Attempt to connect to a remote user acting as server on the specified address and port.
+                await _clientService.ConnectAsync(address, Port);
             }
-
-            // Attempt to connect to a remote user acting as server on the specified address and port.
-            await _clientService.ConnectAsync(address, Port);
+            finally
+            {
+                IsConnectingOrListening = false;
+            }
         }
 
         private void Disconnect()
