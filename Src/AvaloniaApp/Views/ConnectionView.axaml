@@ -18,6 +18,15 @@
             <ia:ChangePropertyAction TargetObject="{Binding #ConnectOrListenButton}" PropertyName="Content"
                                      Value="Listen" />
         </ia:DataTriggerBehavior>
+
+        <ia:DataTriggerBehavior Binding="{Binding IsConnectingOrListening}" Value="False">
+            <ia:ChangePropertyAction TargetObject="{Binding #CancelOrDisconnectButton}" PropertyName="Content"
+                                     Value="Disconnect" />
+        </ia:DataTriggerBehavior>
+        <ia:DataTriggerBehavior Binding="{Binding IsConnectingOrListening}" Value="True">
+            <ia:ChangePropertyAction TargetObject="{Binding #CancelOrDisconnectButton}" PropertyName="Content"
+                                     Value="Cancel" />
+        </ia:DataTriggerBehavior>
     </i:Interaction.Behaviors>
 
     <DockPanel>
@@ -66,7 +75,8 @@
 
                 <Button Grid.Column="1" Grid.Row="0" Name="ConnectOrListenButton" Content="Connect"
                         Command="{Binding ConnectOrListenCommand}" />
-                <Button Grid.Column="1" Grid.Row="1" Content="Disconnect" Command="{Binding DisconnectCommand}" />
+                <Button Grid.Column="1" Grid.Row="1" Name="CancelOrDisconnectButton" Content="Disconnect"
+                        Command="{Binding CancelOrDisconnectCommand}" />
             </Grid>
         </Border>
     </DockPanel>
