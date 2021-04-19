@@ -55,8 +55,17 @@ namespace Chatter.Application.Services
                 await using (cancellationToken.Register(_serverSocket.Dispose)
                     .ConfigureAwait(false))
                 {
-                    clientSocket = await _serverSocket.AcceptAsync()
-                        .ConfigureAwait(false);
+                    try
+                    {
+                        clientSocket = await _serverSocket.AcceptAsync()
+                            .ConfigureAwait(false);
+                    }
+                    catch (SocketException) when (cancellationToken.IsCancellationRequested)
+                    {
+                        // A 'SocketException' means the socket has been disposed as part of a cancellation.
+                        // Throw an 'OperationCanceledException' to signify the cancellation.
+                        throw new OperationCanceledException(cancellationToken);
+                    }
                 }
 
                 // Wrap the connected socket in a 'TcpClient' instance.
@@ -67,12 +76,6 @@ namespace Chatter.Application.Services
 
                 // Start receiving data in a loop and return the task as a representation of the connection.
                 return _tcpClient.LoopReceiveDataAsync();
-            }
-            catch (ObjectDisposedException)
-            {
-                // An 'ObjectDisposedException' means the socket has been disposed as part of a cancellation.
-                // Throw an 'OperationCanceledException' to signify the cancellation.
-                throw new OperationCanceledException(cancellationToken);
             }
             catch
             {
