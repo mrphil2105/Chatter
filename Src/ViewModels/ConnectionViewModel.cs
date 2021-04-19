@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Chatter.Application.Services;
 using Chatter.ViewModels.Abstract;
@@ -7,13 +8,15 @@ using Chatter.ViewModels.Commands;
 
 namespace Chatter.ViewModels
 {
-    public class ConnectionViewModel : ViewModelBase
+    public class ConnectionViewModel : ViewModelBase, IDisposable
     {
         private readonly IClientService _clientService;
         private readonly IDispatcher _dispatcher;
 
         private readonly IServerService _serverService;
         private readonly IViewManager _viewManager;
+
+        private CancellationTokenSource? _cancellationSource;
 
         private bool _isServer;
         private string _address;
@@ -41,7 +44,8 @@ namespace Chatter.ViewModels
 
             // Initialize the command properties for connecting and disconnecting.
             ConnectOrListenCommand = new AsyncCommand(ConnectOrListenAsync, () => !IsConnected);
-            DisconnectCommand = new RelayCommand(Disconnect, () => IsConnected);
+            CancelOrDisconnectCommand =
+                new RelayCommand(CancelOrDisconnect, () => IsConnectingOrListening || IsConnected);
 
             // Subscribe to connected and disconnected events, for when acting as a server.
             serverService.Connected += OnConnected;
@@ -74,7 +78,13 @@ namespace Chatter.ViewModels
         public bool IsConnectingOrListening
         {
             get => _isConnectingOrListening;
-            private set => Set(ref _isConnectingOrListening, value);
+            private set
+            {
+                Set(ref _isConnectingOrListening, value);
+
+                // Inform the controls binding to the following command about the change of can execute.
+                CancelOrDisconnectCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public bool IsConnected
@@ -86,13 +96,13 @@ namespace Chatter.ViewModels
 
                 // Inform the controls binding to the following commands about the change of can execute.
                 ConnectOrListenCommand.RaiseCanExecuteChanged();
-                DisconnectCommand.RaiseCanExecuteChanged();
+                CancelOrDisconnectCommand.RaiseCanExecuteChanged();
             }
         }
 
         public AsyncCommand ConnectOrListenCommand { get; }
 
-        public RelayCommand DisconnectCommand { get; }
+        public RelayCommand CancelOrDisconnectCommand { get; }
 
         private async Task ConnectOrListenAsync()
         {
@@ -114,16 +124,23 @@ namespace Chatter.ViewModels
 
             try
             {
+                _cancellationSource?.Dispose();
+                _cancellationSource = new CancellationTokenSource();
+
                 if (IsServer)
                 {
                     // Start listening for an incoming client on the specified address and port.
-                    await _serverService.ListenAsync(address, Port);
+                    await _serverService.ListenAsync(address, Port, _cancellationSource.Token);
 
                     return;
                 }
 
                 // Attempt to connect to a remote user acting as server on the specified address and port.
-                await _clientService.ConnectAsync(address, Port);
+                await _clientService.ConnectAsync(address, Port, _cancellationSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Ignore 'OperationCanceledException' as it signifies cancellation.
             }
             finally
             {
@@ -131,8 +148,15 @@ namespace Chatter.ViewModels
             }
         }
 
-        private void Disconnect()
+        private void CancelOrDisconnect()
         {
+            if (!IsConnected)
+            {
+                _cancellationSource?.Cancel();
+
+                return;
+            }
+
             if (IsServer)
             {
                 // Disconnect the client gracefully.
@@ -164,6 +188,11 @@ namespace Chatter.ViewModels
                         "Connection Lost");
                 }
             });
+        }
+
+        public void Dispose()
+        {
+            _cancellationSource?.Dispose();
         }
     }
 }
