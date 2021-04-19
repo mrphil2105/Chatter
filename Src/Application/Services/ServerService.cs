@@ -81,6 +81,7 @@ namespace Chatter.Application.Services
             {
                 // Something went wrong, we should release the socket.
                 _serverSocket.Dispose();
+                _serverSocket = null;
 
                 throw;
             }
