@@ -74,7 +74,7 @@ namespace Chatter.ViewModels
         public bool IsConnectingOrListening
         {
             get => _isConnectingOrListening;
-            set => Set(ref _isConnectingOrListening, value);
+            private set => Set(ref _isConnectingOrListening, value);
         }
 
         public bool IsConnected
