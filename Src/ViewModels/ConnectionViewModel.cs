@@ -90,7 +90,7 @@ namespace Chatter.ViewModels
         public bool IsConnected
         {
             get => _isConnected;
-            private set
+            set
             {
                 Set(ref _isConnected, value);
 
