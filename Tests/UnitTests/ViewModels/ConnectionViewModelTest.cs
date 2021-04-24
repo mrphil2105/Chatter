@@ -52,6 +52,19 @@ namespace Chatter.UnitTests.ViewModels
                 .NotThrowAsync<OperationCanceledException>();
         }
 
+        [Theory]
+        [AutoMoqData]
+        public void CancelOrDisconnect_CallsDropClient_WhenIsConnected([Frozen] Mock<IServerService> serverServiceMock,
+            ConnectionViewModel viewModel)
+        {
+            viewModel.IsServer = true;
+            viewModel.IsConnected = true;
+
+            viewModel.CancelOrDisconnectCommand.Execute();
+
+            serverServiceMock.Verify(ss => ss.DropClient(false), Times.Once);
+        }
+
         //
         // Client
         //
@@ -85,6 +98,18 @@ namespace Chatter.UnitTests.ViewModels
 
             await act.Should()
                 .NotThrowAsync<OperationCanceledException>();
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void CancelOrDisconnect_CallsDisconnect_WhenIsConnected([Frozen] Mock<IClientService> clientServiceMock,
+            ConnectionViewModel viewModel)
+        {
+            viewModel.IsConnected = true;
+
+            viewModel.CancelOrDisconnectCommand.Execute();
+
+            clientServiceMock.Verify(cs => cs.Disconnect(false), Times.Once);
         }
 
         //
