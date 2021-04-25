@@ -61,7 +61,8 @@ namespace Chatter.Application.Services
                         clientSocket = await _serverSocket.AcceptAsync()
                             .ConfigureAwait(false);
                     }
-                    catch (SocketException) when (cancellationToken.IsCancellationRequested)
+                    catch (SocketException exception) when (exception.ErrorCode == (int)SocketError.OperationAborted &&
+                        cancellationToken.IsCancellationRequested)
                     {
                         // A 'SocketException' means the socket has been disposed as part of a cancellation.
                         // Throw an 'OperationCanceledException' to signify the cancellation.
