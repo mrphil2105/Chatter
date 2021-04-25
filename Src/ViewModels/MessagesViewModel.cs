@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Chatter.Application.Services;
@@ -11,12 +12,14 @@ namespace Chatter.ViewModels
     public class MessagesViewModel : ViewModelBase
     {
         private readonly IDispatcher _dispatcher;
+        private readonly IViewManager _viewManager;
+
         private readonly IMessageService _messageService;
 
         private string _message;
 
-        public MessagesViewModel(IDispatcher dispatcher, IMessageService messageService, IServerService serverService,
-            IClientService clientService)
+        public MessagesViewModel(IDispatcher dispatcher, IViewManager viewManager, IMessageService messageService,
+            IServerService serverService, IClientService clientService)
         {
             if (serverService is null)
             {
@@ -29,6 +32,8 @@ namespace Chatter.ViewModels
             }
 
             _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+            _viewManager = viewManager ?? throw new ArgumentNullException(nameof(viewManager));
+
             _messageService = messageService ?? throw new ArgumentNullException(nameof(messageService));
 
             _message = string.Empty;
@@ -69,9 +74,19 @@ namespace Chatter.ViewModels
 
             // Remove any leading and trailing white-space characters.
             string trimmedMessage = Message.Trim();
-            await _messageService.SendMessageAsync(trimmedMessage, cancellationSource.Token);
-            // The message has been sent, clear it from the UI.
-            Message = string.Empty;
+
+            try
+            {
+                await _messageService.SendMessageAsync(trimmedMessage, cancellationSource.Token);
+                // The message has been sent, clear it from the UI.
+                Message = string.Empty;
+            }
+            catch (Exception exception) when (exception is OperationCanceledException || exception is IOException)
+            {
+                await _viewManager.ShowErrorBoxAsync("Unable to send message due to network error.", "Unable To Send");
+
+                return;
+            }
 
             // Add the message as a sent message for display.
             var messageViewModel = new MessageViewModel(MessageType.Local, trimmedMessage);
