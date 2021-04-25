@@ -35,6 +35,8 @@ namespace Chatter.Application.Services
 
         public async Task SendMessageAsync(string message, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Copy value to local variable because '_tcpClient' is accessed concurrently.
             var tcpClient = _tcpClient;
 

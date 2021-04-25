@@ -29,6 +29,7 @@ namespace Chatter.Application.Services
             }
 
             ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (_tcpClient != null)
             {
