@@ -10,11 +10,11 @@ namespace Chatter.ViewModels
 {
     public class ConnectionViewModel : ViewModelBase, IDisposable
     {
-        private readonly IClientService _clientService;
         private readonly IDispatcher _dispatcher;
+        private readonly IViewManager _viewManager;
 
         private readonly IServerService _serverService;
-        private readonly IViewManager _viewManager;
+        private readonly IClientService _clientService;
 
         private CancellationTokenSource? _cancellationSource;
 
