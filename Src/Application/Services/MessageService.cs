@@ -35,6 +35,11 @@ namespace Chatter.Application.Services
 
         public async Task SendMessageAsync(string message, CancellationToken cancellationToken = default)
         {
+            if (message is null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             // Copy value to local variable because '_tcpClient' is accessed concurrently.
