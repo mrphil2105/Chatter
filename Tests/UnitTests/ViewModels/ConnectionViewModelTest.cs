@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -54,6 +55,24 @@ namespace Chatter.UnitTests.ViewModels
 
         [Theory]
         [AutoMoqData]
+        public async Task ConnectOrListen_CallsShowErrorBox_WhenListenThrowsSocketException(IPEndPoint endPoint,
+            [Frozen] Mock<IServerService> serverServiceMock, [Frozen] Mock<IViewManager> viewManagerMock,
+            ConnectionViewModel viewModel)
+        {
+            viewModel.IsServer = true;
+            viewModel.Address = endPoint.Address.ToString();
+            viewModel.Port = endPoint.Port;
+            serverServiceMock
+                .Setup(ss => ss.ListenAsync(endPoint.Address, endPoint.Port, It.IsAny<CancellationToken>()))
+                .Throws<SocketException>();
+
+            await viewModel.ConnectOrListenCommand.ExecuteAsync();
+
+            viewManagerMock.Verify(vm => vm.ShowErrorBoxAsync(It.IsAny<string>(), "Unable To Listen"), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public void CancelOrDisconnect_CallsDropClient_WhenIsConnected([Frozen] Mock<IServerService> serverServiceMock,
             ConnectionViewModel viewModel)
         {
@@ -98,6 +117,23 @@ namespace Chatter.UnitTests.ViewModels
 
             await act.Should()
                 .NotThrowAsync<OperationCanceledException>();
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ConnectOrListen_CallsShowErrorBox_WhenConnectThrowsSocketException(IPEndPoint endPoint,
+            [Frozen] Mock<IClientService> clientServiceMock, [Frozen] Mock<IViewManager> viewManagerMock,
+            ConnectionViewModel viewModel)
+        {
+            viewModel.Address = endPoint.Address.ToString();
+            viewModel.Port = endPoint.Port;
+            clientServiceMock.Setup(cs =>
+                    cs.ConnectAsync(endPoint.Address, endPoint.Port, It.IsAny<CancellationToken>()))
+                .Throws<SocketException>();
+
+            await viewModel.ConnectOrListenCommand.ExecuteAsync();
+
+            viewManagerMock.Verify(vm => vm.ShowErrorBoxAsync(It.IsAny<string>(), "Unable To Connect"), Times.Once);
         }
 
         [Theory]
