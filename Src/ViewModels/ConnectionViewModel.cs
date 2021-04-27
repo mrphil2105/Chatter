@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Chatter.Application.Services;
@@ -137,6 +138,15 @@ namespace Chatter.ViewModels
 
                 // Attempt to connect to a remote user acting as server on the specified address and port.
                 await _clientService.ConnectAsync(address, Port, _cancellationSource.Token);
+            }
+            catch (SocketException)
+            {
+                string message = IsServer
+                    ? "Unable to listen on the specified IP address and port."
+                    : "Unable to connect to a server on the specified IP address and port.";
+                string caption = IsServer ? "Unable To Listen" : "Unable To Connect";
+
+                await _viewManager.ShowErrorBoxAsync(message, caption);
             }
             catch (OperationCanceledException)
             {
