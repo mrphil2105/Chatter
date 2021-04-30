@@ -154,7 +154,8 @@ namespace Chatter.UnitTests.ViewModels
 
         [Theory]
         [AutoMoqData]
-        public async Task ConnectOrListen_RaisesPropertyChanged(IPEndPoint endPoint, ConnectionViewModel viewModel)
+        public async Task ConnectOrListen_RaisesPropertyChanged_WhenEndPointIsValid(IPEndPoint endPoint,
+            ConnectionViewModel viewModel)
         {
             viewModel.Address = endPoint.Address.ToString();
             viewModel.Port = endPoint.Port;
