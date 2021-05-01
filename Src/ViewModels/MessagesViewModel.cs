@@ -70,6 +70,11 @@ namespace Chatter.ViewModels
 
         private async Task SendMessageAsync()
         {
+            if (string.IsNullOrWhiteSpace(Message))
+            {
+                return;
+            }
+
             using var cancellationSource = new CancellationTokenSource(5_000);
 
             // Remove any leading and trailing white-space characters.
