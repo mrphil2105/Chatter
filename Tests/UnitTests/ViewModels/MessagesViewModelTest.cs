@@ -14,16 +14,15 @@ namespace Chatter.UnitTests.ViewModels
 {
     public class MessagesViewModelTest
     {
-        // Even though the UI does not allow empty messages to be sent it should still be possible.
         [Theory]
         [AutoMoqData]
-        public async Task SendMessage_CallsSendMessage_WhenMessageIsEmpty(
+        public async Task SendMessage_DoesNotCallSendMessage_WhenMessageIsEmpty(
             [Frozen] Mock<IMessageService> messageServiceMock, MessagesViewModel viewModel)
         {
             await viewModel.SendMessageCommand.ExecuteAsync();
 
             messageServiceMock.Verify(ms => ms.SendMessageAsync(string.Empty, It.IsAny<CancellationToken>()),
-                Times.Once);
+                Times.Never);
         }
 
         [Theory]
